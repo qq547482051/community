@@ -1,22 +1,33 @@
 package com.lym.community.controller;
 
+import com.lym.community.dto.QuestionDTO;
+import com.lym.community.mapper.QuestionMapper;
 import com.lym.community.mapper.UserMapper;
+import com.lym.community.model.Question;
 import com.lym.community.model.User;
+import com.lym.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @Controller
 public class IndexController {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionService questionService;
+
+
 
     @GetMapping("/")
-    public String index(HttpServletRequest request){
+    public String index(HttpServletRequest request,
+                        Model model){
         Cookie[] cookies = request.getCookies();
             if(cookies != null && cookies.length != 0)
         for (Cookie cookie:cookies){
@@ -29,6 +40,8 @@ public class IndexController {
                 break;
             }
         }
+        List<QuestionDTO> questionDTOList = questionService.list();
+        model.addAttribute("questions",questionDTOList);
         return "index";
     }
 }
