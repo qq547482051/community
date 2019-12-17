@@ -5,6 +5,7 @@ import com.lym.community.dto.GithubUser;
 import com.lym.community.mapper.UserMapper;
 import com.lym.community.model.User;
 import com.lym.community.provider.GithubProvider;
+import com.lym.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -35,12 +36,11 @@ public class AuthorizeController {
     private String redirectUri;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request,
                            HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
@@ -49,24 +49,20 @@ public class AuthorizeController {
         accessTokenDTO.setRedirect_uri(redirectUri);
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-            GithubUser githubUser = githubProvider.getUser(accessToken);
-            if (githubUser != null) {
-                User user = new User();
-                String token = UUID.randomUUID().toString();
-                user.setToken(token);
-                user.setName(githubUser.getName());
-                user.setAccount_id(String.valueOf(githubUser.getId()));
-                user.setGmt_create(System.currentTimeMillis());
-                user.setGmt_modified(user.getGmt_create());
-                user.setAvatar_url(githubUser.getAvatar_url());
-                userMapper.insert(user);
-                response.addCookie(new Cookie("token",token));
-                // 登录成功，写cookie 和session
-                request.getSession().setAttribute("user", githubUser);
-                return "redirect:/";
-            } else {
-                // 登录失败，重新登录
-                return "redirect:/";
-            }
+        GithubUser githubUser = githubProvider.getUser(accessToken);
+        if (githubUser != null && githubUser.getId() != null) {
+            User user = new User();
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            user.setName(githubUser.getName());
+            user.setAccount_id(String.valueOf(githubUser.getId()));
+            user.setAvatar_url(githubUser.getAvatar_url());
+            userService.createOrUpdate(user);
+            response.addCookie(new Cookie("token", token));
+            return "redirect:/";
+        } else {
+            // 登录失败，重新登录
+            return "redirect:/";
         }
     }
+}
