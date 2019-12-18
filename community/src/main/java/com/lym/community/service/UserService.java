@@ -2,8 +2,11 @@ package com.lym.community.service;
 
 import com.lym.community.mapper.UserMapper;
 import com.lym.community.model.User;
+import com.lym.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -11,19 +14,28 @@ public class UserService {
     private UserMapper userMapper;
 
     public void createOrUpdate(User user) {
-        User dbUser = userMapper.findByAccountId(user.getAccount_id());
-        if (dbUser == null) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andAccount_idEqualTo(user.getAccount_id());
+        List<User> users = userMapper.selectByExample(new UserExample());
+
+        if (users.size() == 0) {
             // 插入
             user.setGmt_create(System.currentTimeMillis());
             user.setGmt_modified(user.getGmt_create());
             userMapper.insert(user);
         } else {
             //更新
-            dbUser.setGmt_modified(System.currentTimeMillis());
-            dbUser.setAvatar_url(user.getAvatar_url());
-            dbUser.setName(user.getName());
-            dbUser.setToken(user.getToken());
-            userMapper.update(dbUser);
+            User dbUser = users.get(0);
+            User updateUser = new User();
+            updateUser.setGmt_modified(System.currentTimeMillis());
+            updateUser.setAvatar_url(user.getAvatar_url());
+            updateUser.setName(user.getName());
+            updateUser.setToken(user.getToken());
+            UserExample example = new UserExample();
+            example.createCriteria()
+                    .andIdEqualTo(dbUser.getId());
+            userMapper.updateByExampleSelective(updateUser, example);
         }
     }
 }
