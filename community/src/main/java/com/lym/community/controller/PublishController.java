@@ -1,7 +1,6 @@
 package com.lym.community.controller;
 
 import com.lym.community.dto.QuestionDTO;
-import com.lym.community.mapper.QuestionMapper;
 import com.lym.community.model.Question;
 import com.lym.community.model.User;
 import com.lym.community.service.QuestionService;
