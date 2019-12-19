@@ -4,6 +4,7 @@ import com.lym.community.dto.PaginationDTO;
 import com.lym.community.dto.QuestionDTO;
 import com.lym.community.exception.CustomizeErrorCode;
 import com.lym.community.exception.CustomizeException;
+import com.lym.community.mapper.QuestionExtMapper;
 import com.lym.community.mapper.QuestionMapper;
 import com.lym.community.mapper.UserMapper;
 import com.lym.community.model.Question;
@@ -22,6 +23,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
 
