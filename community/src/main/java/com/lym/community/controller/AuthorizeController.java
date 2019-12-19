@@ -2,7 +2,6 @@ package com.lym.community.controller;
 
 import com.lym.community.dto.AccessTokenDTO;
 import com.lym.community.dto.GithubUser;
-import com.lym.community.mapper.UserMapper;
 import com.lym.community.model.User;
 import com.lym.community.provider.GithubProvider;
 import com.lym.community.service.UserService;
@@ -17,9 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
-/**
- * Created by codedrinker on 2019/4/24.
- */
 @Controller
 public class AuthorizeController {
 

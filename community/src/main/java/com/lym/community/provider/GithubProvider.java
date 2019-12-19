@@ -1,17 +1,13 @@
 package com.lym.community.provider;
 
 import com.alibaba.fastjson.JSON;
-
 import com.lym.community.dto.AccessTokenDTO;
 import com.lym.community.dto.GithubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 
-/**
- * Created by codedrinker on 2019/4/24.
- */
+
 @Component
 public class GithubProvider {
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
