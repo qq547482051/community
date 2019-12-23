@@ -1,6 +1,6 @@
 package com.lym.community.exception;
 
 public interface ICustomizeErrorCode {
-    String getMessage();
+    String getMessage() ;
     Integer getCode();
 }

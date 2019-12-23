@@ -19,15 +19,17 @@ import java.util.List;
 
 @Service
 public class QuestionService {
+
     @Autowired
     private QuestionMapper questionMapper;
-    @Autowired
-    private UserMapper userMapper;
+
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
+    @Autowired
+    private UserMapper userMapper;
 
+    public PaginationDTO list(Integer page, Integer size) {
 
         PaginationDTO paginationDTO = new PaginationDTO();
 
@@ -44,7 +46,6 @@ public class QuestionService {
         if (page < 1) {
             page = 1;
         }
-
         if (page > totalPage) {
             page = totalPage;
         }
@@ -52,8 +53,9 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage, page);
         //size*(page-1)
         Integer offset = size * (page - 1);
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(),new RowBounds(offset, size));
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -61,6 +63,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
+
         paginationDTO.setQuestions(questionDTOList);
         return paginationDTO;
     }
@@ -69,10 +72,11 @@ public class QuestionService {
         PaginationDTO paginationDTO = new PaginationDTO();
 
         Integer totalPage;
+
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(userId);
-        Integer totalCount = (int) questionMapper. countByExample(questionExample);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -94,7 +98,7 @@ public class QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria()
                 .andCreatorEqualTo(userId);
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example,new RowBounds(offset, size));
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
@@ -111,7 +115,7 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
-        if(question == null){
+        if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         QuestionDTO questionDTO = new QuestionDTO();
@@ -123,11 +127,15 @@ public class QuestionService {
 
     public void createOrUpdate(Question question) {
         if (question.getId() == null) {
+            // 创建
             question.setGmt_create(System.currentTimeMillis());
             question.setGmt_modified(question.getGmt_create());
+            question.setView_count(0);
+            question.setLike_count(0);
+            question.setComment_count(0);
             questionMapper.insert(question);
         } else {
-            question.setGmt_modified(question.getGmt_create());
+            // 更新
             Question updateQuestion = new Question();
             updateQuestion.setGmt_modified(System.currentTimeMillis());
             updateQuestion.setTitle(question.getTitle());
@@ -137,19 +145,16 @@ public class QuestionService {
             example.createCriteria()
                     .andIdEqualTo(question.getId());
             int updated = questionMapper.updateByExampleSelective(updateQuestion, example);
-            if(updated != 1){
+            if (updated != 1) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
     }
 
     public void incView(Integer id) {
-        Question question = questionMapper.selectByPrimaryKey(id);
-        Question updateQuestion = new Question();
-        updateQuestion.setView_count(question.getView_count() + 1);
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.createCriteria()
-                .andIdEqualTo(id);
-        questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+        Question question = new Question();
+        question.setId(id);
+        question.setView_count(1);
+        questionExtMapper.incView(question);
     }
 }

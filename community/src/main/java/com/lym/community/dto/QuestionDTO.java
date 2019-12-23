@@ -13,7 +13,7 @@ public class QuestionDTO {
     private Long gmt_modified;
     private Integer creator;
     private Integer view_count;
-    private Integer like_count;
     private Integer comment_count;
+    private Integer like_count;
     private User user;
 }

@@ -15,30 +15,27 @@ import java.util.Map;
 
 @Controller
 public class CommentController {
+
     @Autowired
     private CommentService commentService;
 
-
     @ResponseBody
-    @RequestMapping(value = "/comment",method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
-                       HttpServletRequest request){
-        User user =(User) request.getSession().getAttribute("user");
-        if(user == null){
-            return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
+    @RequestMapping(value = "/comment", method = RequestMethod.POST)
+        public Object post(@RequestBody CommentDTO commentDTO,
+                HttpServletRequest request) {
+            User user = (User) request.getSession().getAttribute("user");
+            if (user == null) {
+                return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
+            }
+            Comment comment = new Comment();
+            comment.setParent_id(commentDTO.getParent_id());
+            comment.setContent(commentDTO.getContent());
+            comment.setType(commentDTO.getType());
+            comment.setGmt_modified(System.currentTimeMillis());
+            comment.setGmt_create(System.currentTimeMillis());
+            comment.setCommentator(user.getId());
+            comment.setLike_count(0L);
+            commentService.insert(comment);
+            return ResultDTO.okOf();
         }
-
-        Comment comment = new Comment();
-        comment.setParent_id(commentDTO.getParent_id());
-        comment.setContent(commentDTO.getContent());
-        comment.setType(commentDTO.getType());
-        comment.setGmt_modified(System.currentTimeMillis());
-        comment.setGmt_create(System.currentTimeMillis());
-        comment.setCommentator(user.getId());
-        comment.setLike_count(0L);
-        commentService.insert(comment);
-        Map<Object,Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("message","成功");
-        return objectObjectHashMap;
     }
-}
