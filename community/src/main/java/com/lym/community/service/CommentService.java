@@ -45,7 +45,7 @@ public class CommentService {
             }
             commentMapper.insert(comment);
             question.setComment_count(1);
-            questionExtMapper.incCommentCount(question);
+            questionExtMapper.incComment_count(question);
         }
     }
 }

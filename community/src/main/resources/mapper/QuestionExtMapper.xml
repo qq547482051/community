@@ -4,12 +4,12 @@
   <resultMap id="BaseResultMap" type="com.lym.community.model.Question">
     <id column="ID" jdbcType="INTEGER" property="id"/>
     <result column="TITLE" jdbcType="VARCHAR" property="title"/>
-    <result column="GMT_CREATE" jdbcType="BIGINT" property="gmtCreate"/>
-    <result column="GMT_MODIFIED" jdbcType="BIGINT" property="gmtModified"/>
+    <result column="GMT_CREATE" jdbcType="BIGINT" property="gmt_create"/>
+    <result column="GMT_MODIFIED" jdbcType="BIGINT" property="gmt_modified"/>
     <result column="CREATOR" jdbcType="INTEGER" property="creator"/>
-    <result column="COMMENT_COUNT" jdbcType="INTEGER" property="commentCount"/>
-    <result column="VIEW_COUNT" jdbcType="INTEGER" property="viewCount"/>
-    <result column="LIKE_COUNT" jdbcType="INTEGER" property="likeCount"/>
+    <result column="COMMENT_COUNT" jdbcType="INTEGER" property="comment_count"/>
+    <result column="VIEW_COUNT" jdbcType="INTEGER" property="view_count"/>
+    <result column="LIKE_COUNT" jdbcType="INTEGER" property="like_count"/>
     <result column="TAG" jdbcType="VARCHAR" property="tag"/>
   </resultMap>
 
@@ -19,10 +19,10 @@
     VIEW_COUNT = VIEW_COUNT + #{view_count,jdbcType=INTEGER}
     where id = #{id}
     </update>
-  <update id="incCommentCount" parameterType="com.lym.community.model.Question">
+  <update id="incComment_count" parameterType="com.lym.community.model.Question">
     update QUESTION
     set
-    COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
+    COMMENT_COUNT = COMMENT_COUNT + #{comment_count,jdbcType=INTEGER}
     where id = #{id}
     </update>
 </mapper>
