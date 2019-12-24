@@ -14,9 +14,16 @@ function post() {
             if(response.code == 200){
                 $("#comment_section").hide();
             }else {
-                alert(response.message);
+                if(response.code ==2003){
+                    var isAccepted = confirm(response.message);
+                    if(isAccepted){
+                        window.open("https://github.com/login/oauth/authorize?client_id=d7afcf2bdb1c1f438cdd&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
+                        window.localStorage.setItem("closable", true);
+                    }
+                }else {
+                    alert(response.message);
+                }
             }
-            console.log(response);
         },
         dataType:"json"
     });
