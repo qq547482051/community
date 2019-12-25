@@ -36,6 +36,10 @@ body {
     font-size: 13px;
 }
 
+.edit-fontsize{
+    font-size: 18px;
+}
+
 .jumbotron {
     margin: 50px;
 }
@@ -48,21 +52,32 @@ body {
     float: right;
     margin: 10px 0;
 }
-.comment-sp{
+
+.comments {
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-sp {
     margin-top: 0;
 }
-.comment-nameFontsize{
+
+.comment-name-fontsize {
     font-size: 11px;
 }
-.menu{
+
+.menu {
     margin-top: 10px;
-    color:#999;
+    color: #999;
 }
-.menu .icon{
+
+.menu .icon {
     margin-right: 8px;
     font-size: 15px;
     cursor: pointer;
 }
-.menu .icon:hover{
-    color:#499ef3;
+
+.menu .icon:hover {
+    color: #499ef3;
 }
