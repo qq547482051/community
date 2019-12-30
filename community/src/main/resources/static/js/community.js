@@ -2,9 +2,10 @@
 function post() {
     var questionId = $("#question_id").val();
     var content = $("#comment_content").val();
-    comment2target(questionId,1,content);
+    comment2target(questionId, 1, content);
 }
-function comment2target(targetId,type,content) {
+
+function comment2target(targetId, type, content) {
     if (!content) {
         alert("不能回复空内容");
         return;
@@ -36,10 +37,11 @@ function comment2target(targetId,type,content) {
         dataType: "json"
     });
 }
+
 function comment(e) {
     var commentId = e.getAttribute("data-id");
-    var content = $("#input-"+commentId).val();
-    comment2target(commentId,2,content);
+    var content = $("#input-" + commentId).val();
+    comment2target(commentId, 2, content);
 }
 
 //展开二级回复
@@ -56,4 +58,22 @@ function collapseComments(e) {
         e.setAttribute("data-collapse", "in");
         e.classList.add("active");
     }
+}
+
+//
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    if (previous.split(",").indexOf(value) == -1) {
+        if (previous) {
+            $("#tag").val(previous + ',' + value);
+        } else {
+            $("#tag").val(value);
+        }
+    }
+}
+
+//展示标签选择栏
+function showSelectTag() {
+    $("#select-tag").show();
 }
