@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <label for="tag">添加标签:</label>
                     <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag"
-                           placeholder="输入标签，以，号分隔" autocomplete="off" onclick="showSelectTag()">
+                           placeholder="选择标签" autocomplete="off" onclick="showSelectTag()">
                     <div id="select-tag" class="publish-tag-tab">
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" th:each="selectCategory: ${tags}">
