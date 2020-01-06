@@ -106,3 +106,8 @@ body {
     display: inline-block;
 }
 
+.footer{
+    padding: 5px 35%;
+    color: #666;
+}
+
