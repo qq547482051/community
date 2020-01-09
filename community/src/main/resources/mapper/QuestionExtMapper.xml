@@ -27,9 +27,15 @@
     </update>
   <select id="selectRelated" parameterType="com.lym.community.model.Question" resultMap="BaseResultMap">
 
-    select
-    *
-    from question where id != #{id} and tag regexp #{tag}
+    select * from QUESTION
+    <where>
+      <if test="id != null">
+        and id != #{id}
+      </if>
+      <if test="tag != null and tag != ''">
+        and tag regexp #{tag}
+      </if>
+    </where>
   </select>
   <select id="countBySearch" parameterType="com.lym.community.dto.QuestionQueryDTO"
           resultType="java.lang.Integer">
